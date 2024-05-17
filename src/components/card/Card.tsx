@@ -7,28 +7,36 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
-import { User } from "../../api/users.api";
+import { User, removeUser } from "../../api/users.api";
 
-const boxItems = [
-  {
-    heading: "نام:",
-    text: "امین مراید",
-  },
-  {
-    heading: "شماره موبایل:",
-    text: "09100034661",
-  },
-  {
-    heading: "نسبت:",
-    text: "همکار",
-  },
-  {
-    heading: "ایمیل:",
-    text: "aminmarayed4@gmail.com",
-  },
-];
+function CardItem({
+  user,
+  setUsers,
+  users,
+}: {
+  user: User;
+  users: User[];
+  setUsers: (users: User[]) => void;
+}) {
+  const boxItems = [
+    {
+      heading: "نام:",
+      text: user.name,
+    },
+    {
+      heading: "شماره موبایل:",
+      text: user.mobile,
+    },
+    {
+      heading: "نسبت:",
+      text: user.ratio,
+    },
+    {
+      heading: "ایمیل:",
+      text: user.email,
+    },
+  ];
 
-function CardItem({ user }: {user:User}) {
   return (
     <Card
       maxHeight={"210px"}
@@ -40,7 +48,7 @@ function CardItem({ user }: {user:User}) {
         {boxItems.map((item) => (
           <Box display={"flex"} alignItems={"center"}>
             <Heading fontSize={"16px"}>{item.heading}</Heading>
-            <Text>{user.name}</Text>
+            <Text>{item.text}</Text>
           </Box>
         ))}
       </CardBody>
@@ -58,6 +66,11 @@ function CardItem({ user }: {user:User}) {
           bg={"red"}
           textColor={"white"}
           _hover={"none"}
+          onClick={async () => {
+
+            await removeUser(user.id);
+            setUsers(users.filter((u) => u.id !== user.id));
+          }}
         >
           حذف
         </Button>
@@ -67,5 +80,3 @@ function CardItem({ user }: {user:User}) {
 }
 
 export default CardItem;
-
-

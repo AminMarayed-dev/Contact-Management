@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="flex px-3 mt-4 gap-4">
       <Form setUsers={setUsers} users={users}/>
-      <ListUsers users={users}/>
+      <ListUsers users={users} setUsers={setUsers}/>
     </div>
   );
 }
