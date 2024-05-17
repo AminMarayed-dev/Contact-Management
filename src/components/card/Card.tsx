@@ -7,6 +7,7 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
+import { User } from "../../api/users.api";
 
 const boxItems = [
   {
@@ -27,18 +28,19 @@ const boxItems = [
   },
 ];
 
-function CardItem() {
+function CardItem({ user }: {user:User}) {
   return (
     <Card
       maxHeight={"210px"}
       bg={"#e5e7eb"}
       shadow={"0px 3px 8px rgba(0, 0, 0, 0.24)"}
+      key={user.id}
     >
       <CardBody>
         {boxItems.map((item) => (
           <Box display={"flex"} alignItems={"center"}>
             <Heading fontSize={"16px"}>{item.heading}</Heading>
-            <Text>{item.text}</Text>
+            <Text>{user.name}</Text>
           </Box>
         ))}
       </CardBody>
@@ -65,3 +67,5 @@ function CardItem() {
 }
 
 export default CardItem;
+
+
