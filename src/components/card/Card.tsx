@@ -8,15 +8,15 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { User, removeUser } from "../../api/users.api";
+import { useContext } from "react";
+import { FromContext } from "../../context/FormContextProvider";
+
 
 function CardItem({
   user,
-  setUsers,
-  users,
+
 }: {
   user: User;
-  users: User[];
-  setUsers: (users: User[]) => void;
 }) {
   const boxItems = [
     {
@@ -36,6 +36,9 @@ function CardItem({
       text: user.email,
     },
   ];
+  const {setFirstName, setLastName, setMobile, setRatio, setEmail, users, setUsers, setTextBtn, setEditId} = useContext(FromContext);
+
+
 
   return (
     <Card
@@ -58,6 +61,16 @@ function CardItem({
           bg={"blue"}
           textColor={"white"}
           _hover={"none"}
+          onClick={async() => {
+            const[first, last] = user.name.split(" ");
+            setFirstName(first);
+            setLastName(last);
+            setMobile(user.mobile);
+            setRatio(user.ratio);
+            setEmail(user.email);
+            setTextBtn("ویرایش");
+            setEditId(user.id);
+          }}
         >
           ویرایش
         </Button>
