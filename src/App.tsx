@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <Header/>
-      <div className="flex px-3 mt-4 gap-4">
+      <div className="flex flex-col md:flex-row  px-3 mt-4 gap-4">
         <FormContextProvider>
           <Form />
           <ListUsers />

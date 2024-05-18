@@ -1,3 +1,5 @@
+
+
 import {
   Button,
   FormControl,
@@ -77,7 +79,7 @@ function Form() {
   });
 
   return (
-    <div className="flex flex-col gap-3 w-1/2 items-center">
+    <div className="flex flex-col gap-3 w-full md:w-1/2 items-center">
       <h3 className="font-bold text-lg">اضافه/ویرایش کاربران</h3>
       <FormControl
         px={8}
@@ -185,3 +187,4 @@ function Form() {
 }
 
 export default Form;
+
