@@ -5,12 +5,13 @@ import {
   Input,
   Select,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { User, getUsers, postUsers } from "../../api/users.api";
+import { useContext, useEffect } from "react";
+import { getUsers, postUsers, updateUser } from "../../api/users.api";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import * as Yup from "yup";
+import { FromContext } from "../../context/FormContextProvider";
 
 const options = [
   {
@@ -41,27 +42,36 @@ const validationSchema = Yup.object().shape({
   ratio: Yup.string().required("لطفا یک نسبت انتخاب کنید"),
 });
 
-type SetUserType = {
-  setUsers: (users: User[]) => void;
-  users: User[];
-};
-
-function Form({ setUsers, users }: SetUserType) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [email, setEmail] = useState("");
-  const [ratio, setRatio] = useState("ratio");
+function Form() {
+  const {
+    firstName,
+    lastName,
+    mobile,
+    email,
+    ratio,
+    users,
+    setFirstName,
+    setLastName,
+    setMobile,
+    setEmail,
+    setRatio,
+    setUsers,
+    textBtn,
+    setTextBtn,
+    editId,
+    setEditId
+  } = useContext(FromContext);
 
   useEffect(() => {
     getUsers().then((data) => setUsers(data));
-  }, []);
+  }, [setUsers]);
 
   // validation
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
@@ -138,13 +148,28 @@ function Form({ setUsers, users }: SetUserType) {
         <Button
           width={"20%"}
           onClick={handleSubmit(async (data) => {
-            await postUsers({
-              id: String(Date.now()),
-              name: `${data.firstName} ${data.lastName}`,
-              mobile: data.mobile,
-              email: data.email,
-              ratio: data.ratio,
-            }).then((data) => setUsers([...users, data]));
+            // edit
+            if (editId) {
+              updateUser(editId, {
+                name: `${data.firstName} ${data.lastName}`,
+                mobile: data.mobile,
+                email: data.email,
+                ratio: data.ratio,
+              }).then(() => getUsers().then((data) => setUsers(data)));
+              setTextBtn('اضافه کردن');
+              setEditId("")
+            } else {
+              await postUsers({
+                id: String(Date.now()),
+                name: `${data.firstName} ${data.lastName}`,
+                mobile: data.mobile,
+                email: data.email,
+                ratio: data.ratio,
+              }).then((data) => setUsers([...users, data]));
+            }
+            // add
+            // reset
+            reset();
             setFirstName("");
             setLastName("");
             setEmail("");
@@ -152,7 +177,7 @@ function Form({ setUsers, users }: SetUserType) {
             setRatio("ratio");
           })}
         >
-          اضافه کردن
+          {textBtn}
         </Button>
       </FormControl>
     </div>
