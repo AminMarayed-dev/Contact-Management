@@ -1,5 +1,3 @@
-
-
 import {
   Button,
   FormControl,
@@ -18,19 +16,19 @@ import { FromContext } from "../../context/FormContextProvider";
 const options = [
   {
     text: "نسبت",
-    value: "ratio",
+    value: "نسبت",
   },
   {
     text: "دوست",
-    value: "friend",
+    value: "دوست",
   },
   {
     text: "همکار",
-    value: "colleague",
+    value: "همکار",
   },
   {
     text: "سایر",
-    value: "other",
+    value: "سایر",
   },
 ];
 
@@ -61,7 +59,7 @@ function Form() {
     textBtn,
     setTextBtn,
     editId,
-    setEditId
+    setEditId,
   } = useContext(FromContext);
 
   useEffect(() => {
@@ -76,7 +74,23 @@ function Form() {
     reset,
   } = useForm({
     resolver: yupResolver(validationSchema),
+    defaultValues: {
+      firstName: firstName,
+      lastName: lastName,
+      mobile: mobile,
+      email: email,
+      ratio: ratio,
+    },
   });
+  useEffect(() => {
+    reset({
+      firstName,
+      lastName,
+      mobile,
+      email,
+      ratio,
+    });
+  }, [firstName, lastName, mobile, email, ratio, reset]);
 
   return (
     <div className="flex flex-col gap-3 w-full md:w-1/2 items-center">
@@ -97,10 +111,14 @@ function Form() {
           value={firstName}
           {...register("firstName")}
           onChange={(e) => {
+            console.log(e.target.value);
             setFirstName(e.target.value);
           }}
         />
-        {errors.firstName && (
+        {/* {errors.firstName && (
+          <p className="text-red-500">{errors.firstName.message}</p>
+        )} */}
+        {errors.firstName && typeof errors.firstName.message === "string" && (
           <p className="text-red-500">{errors.firstName.message}</p>
         )}
         <FormLabel>نام خانوادگی:</FormLabel>
@@ -111,7 +129,7 @@ function Form() {
           {...register("lastName")}
           onChange={(e) => setLastName(e.target.value)}
         />
-        {errors.lastName && (
+        {errors.lastName && typeof errors.lastName.message === "string" && (
           <p className="text-red-500">{errors.lastName.message}</p>
         )}
         <FormLabel>شماره موبایل:</FormLabel>
@@ -122,7 +140,7 @@ function Form() {
           {...register("mobile")}
           onChange={(e) => setMobile(e.target.value)}
         />
-        {errors.mobile && (
+        {errors.mobile && typeof errors.mobile.message === "string" && (
           <p className="text-red-500">{errors.mobile.message}</p>
         )}
         <FormLabel>نسبت:</FormLabel>
@@ -130,6 +148,8 @@ function Form() {
           value={ratio}
           {...register("ratio")}
           onChange={(e) => setRatio(e.target.value)}
+          className="hide-arrow"
+          icon={undefined}
         >
           {options.map((option, index) => (
             <option value={option.value} key={index + 1}>
@@ -137,7 +157,9 @@ function Form() {
             </option>
           ))}
         </Select>
-        {errors.ratio && <p className="text-red-500">{errors.ratio.message}</p>}
+        {errors.ratio && typeof errors.ratio.message === "string" && (
+          <p className="text-red-500">{errors.ratio.message}</p>
+        )}
         <FormLabel>ایمیل:</FormLabel>
         <Input
           type="email"
@@ -146,7 +168,9 @@ function Form() {
           {...register("email")}
           onChange={(e) => setEmail(e.target.value)}
         />
-        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+        {errors.email && typeof errors.email.message === "string" && (
+          <p className="text-red-500">{errors.email.message}</p>
+        )}
         <Button
           width={"20%"}
           onClick={handleSubmit(async (data) => {
@@ -158,8 +182,8 @@ function Form() {
                 email: data.email,
                 ratio: data.ratio,
               }).then(() => getUsers().then((data) => setUsers(data)));
-              setTextBtn('اضافه کردن');
-              setEditId("")
+              setTextBtn("اضافه کردن");
+              setEditId("");
             } else {
               await postUsers({
                 id: String(Date.now()),
@@ -176,7 +200,7 @@ function Form() {
             setLastName("");
             setEmail("");
             setMobile("");
-            setRatio("ratio");
+            setRatio("نسبت");
           })}
         >
           {textBtn}
@@ -187,4 +211,3 @@ function Form() {
 }
 
 export default Form;
-

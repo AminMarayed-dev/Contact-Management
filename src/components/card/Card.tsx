@@ -82,7 +82,7 @@ function CardItem({
           onClick={async () => {
 
             await removeUser(user.id);
-            setUsers(users.filter((u) => u.id !== user.id));
+            setUsers(users.filter((u:User) => u.id !== user.id));
           }}
         >
           حذف
