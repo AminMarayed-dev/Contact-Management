@@ -2,7 +2,7 @@ import axios from "axios";
 import { BASE_URL } from "./config.api";
 
 export type User = {
-  id: string;
+  id?: string;
   name: string;
   mobile: string | number;
   email: string;
@@ -20,7 +20,12 @@ export async function getUsers() {
 }
 
 
-export async function removeUser(id:string | number) {
+export async function removeUser(id:string | undefined) {
   const res = await axios.delete<User>(`${BASE_URL}/users/${id}`);
+  return res.data;
+}
+
+export async function updateUser(id:string|number , user:User) {
+  const res = await axios.patch<User>(`${BASE_URL}/users/${id}`, user);
   return res.data;
 }
